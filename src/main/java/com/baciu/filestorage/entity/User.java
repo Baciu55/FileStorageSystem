@@ -7,13 +7,11 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity
-@Data
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
+@Getter
 @EqualsAndHashCode(exclude = {"files", "groups"})
-@Table(name = "users")
+@ToString(exclude = {"files", "groups"})
+@Entity
 public class User {
 
     @Id
@@ -21,14 +19,11 @@ public class User {
     @Column(unique = true, nullable = false)
     private Long id;
 
-
     @Column(unique = true, nullable = false)
     private String username;
 
-
     @Column(unique = true, nullable = false)
     private String email;
-
 
     @Column(nullable = false)
     private String password;
@@ -48,9 +43,19 @@ public class User {
             inverseJoinColumns = {@JoinColumn(name = "role_id")})
     private Set<Role> roles = new HashSet<>(0);
 
+    @Builder
+    private User(String username, String email, String password, Set<Group> groups, Set<File> files, Set<Role> roles) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.groups = groups;
+        this.files = files;
+        this.roles = roles;
+    }
+
     @PrePersist
     private void setDate() {
-        this.setRegisterDate(new Date());
+        this.registerDate = new Date();
     }
 
 }

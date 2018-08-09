@@ -6,11 +6,10 @@ import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
-@Data
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
+@Getter
 @EqualsAndHashCode(exclude = "users")
+@ToString(exclude = "users")
 @Entity
 public class Role {
 
@@ -25,4 +24,9 @@ public class Role {
     @ManyToMany(fetch = FetchType.EAGER,  mappedBy = "roles")
     private Set<User> users = new HashSet<>(0);
 
+    @Builder
+    private Role(String name, Set<User> users) {
+        this.name = name;
+        this.users = users;
+    }
 }

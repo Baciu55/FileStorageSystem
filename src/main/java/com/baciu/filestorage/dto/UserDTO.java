@@ -1,9 +1,6 @@
 package com.baciu.filestorage.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -11,22 +8,23 @@ import javax.validation.constraints.Size;
 import java.util.Date;
 import java.util.Set;
 
-@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+
 public class UserDTO {
 
     private Long id;
 
-    @Size(min=3, max=30, message="Długość loginu powinna mieścic się w granicach 3 - 30 znaków")
+    @Size(min=3, max=30, message="username must be longer 3 and shorter than 30 characters")
     private String username;
 
-    @Email(message = "niepoprawny format email")
-    @NotEmpty(message = "niepoprawny format email")
+    @Email(message = "invalid email format")
+    @NotEmpty(message = "email can not be empty")
     private String email;
 
-    @Size(min=3, max=30, message="Długość hasła powinna mieścic się w granicach 3 - 30 znaków")
+    @Size(min=3, max=30, message="password must be longer 3 and shorter than 30 characters")
     private String password;
 
     private Date registerDate;

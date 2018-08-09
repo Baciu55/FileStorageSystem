@@ -7,13 +7,11 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity
-@Data
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
+@Getter
 @EqualsAndHashCode(exclude = {"user", "groups"})
-@Table(name = "file")
+@ToString(exclude = {"user", "groups"})
+@Entity
 public class File {
 
     @Id
@@ -45,6 +43,17 @@ public class File {
 
     @PrePersist
     private void setDate() {
-        this.setUploadDate(new Date());
+        this.uploadDate = new Date();
+    }
+
+    @Builder
+    private File(String path, String name, String description, Date uploadDate, Long size, User user, Set<Group> groups) {
+        this.path = path;
+        this.name = name;
+        this.description = description;
+        this.uploadDate = uploadDate;
+        this.size = size;
+        this.user = user;
+        this.groups = groups;
     }
 }

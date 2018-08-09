@@ -1,21 +1,18 @@
 package com.baciu.filestorage.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.validation.constraints.Size;
 import java.util.Set;
 
-@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
 public class GroupDTO {
 
     private Long id;
-    @Size(min=0, max=30, message="Nazwa grupy nie może być dłuższa niż 30 znaków")
+    @Size(min=3, max=30, message="group name must be longer than 3 and shorter than 30 characters")
     private String name;
     private String description;
     private Set<UserDTO> users;

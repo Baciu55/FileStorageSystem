@@ -1,20 +1,17 @@
 package com.baciu.filestorage.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity
-@Builder
+
 @NoArgsConstructor
-@AllArgsConstructor
-@Data
-@Table(name = "groups")
+@Getter
+@EqualsAndHashCode(exclude = {"users", "files"})
+@ToString(exclude = {"users", "files"})
+@Entity
 public class Group {
 
     @Id
@@ -40,4 +37,12 @@ public class Group {
             inverseJoinColumns = {@JoinColumn(name = "file_id", nullable = false)
             })
     private Set<File> files = new HashSet<>(0);
+
+    @Builder
+    private Group(String name, String description, Set<User> users, Set<File> files) {
+        this.name = name;
+        this.description = description;
+        this.users = users;
+        this.files = files;
+    }
 }
