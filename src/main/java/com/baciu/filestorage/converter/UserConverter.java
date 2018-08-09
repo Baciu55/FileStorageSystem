@@ -21,30 +21,23 @@ public class UserConverter {
     private RoleConverter roleConverter;
 
     public User toEntity(UserDTO userDTO) {
-        User user = new User();
-        user.setId(userDTO.getId());
-        user.setUsername(userDTO.getUsername());
-        user.setEmail(userDTO.getEmail());
-        user.setPassword(userDTO.getPassword());
-        user.setRegisterDate(user.getRegisterDate());
-        return user;
+        return User.builder()
+                .id(userDTO.getId())
+                .username(userDTO.getUsername())
+                .email(userDTO.getEmail())
+                .password(userDTO.getPassword())
+                .registerDate(userDTO.getRegisterDate())
+                .build();
     }
 
     public UserDTO toDTO(User user, boolean includeData) {
-        UserDTO userDTO = new UserDTO();
-        userDTO.setId(user.getId());
-        userDTO.setUsername(user.getUsername());
-        userDTO.setEmail(user.getEmail());
-        userDTO.setPassword(user.getPassword());
-        userDTO.setRegisterDate(user.getRegisterDate());
-        //userDTO.setRoles(roleConverter.toDTO(user.getRoles()));
-
-        if (includeData) {
-            userDTO.setFiles(fileConverter.toDTO(user.getFiles()));
-            userDTO.setGroups(groupConverter.toDTO(user.getGroups()));
-        }
-
-        return userDTO;
+        return UserDTO.builder()
+                .id(user.getId())
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .password(user.getPassword())
+                .registerDate(user.getRegisterDate())
+                .build();
     }
 
     public Set<UserDTO> toDTO(Set<User> users) {

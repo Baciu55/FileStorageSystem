@@ -21,14 +21,14 @@ public class UserService {
     @Autowired
     private UserConverter userConverter;
 
-    public UserDTO getUser(Long id) {
-        if(!userRepository.exists(id)) return null;
+    public UserDTO getUser(Long id) throws UserNotExistsException {
+        if(!userRepository.exists(id))
+            throw new UserNotExistsException();
 
         return userConverter.toDTO(userRepository.findOne(id), true);
     }
 
     public UserDTO addUser(UserDTO userDTO) throws EmailExistsException, UsernameExistsException {
-        System.out.println(userDTO.toString());
         User user = userConverter.toEntity(userDTO);
 
         if (userRepository.findByUsername(user.getUsername()) != null)
@@ -37,17 +37,7 @@ public class UserService {
         if (userRepository.findByEmail(user.getEmail()) != null)
             throw new EmailExistsException();
 
-        user.setRegisterDate(new Date());
-
         return userConverter.toDTO(userRepository.save(user), false);
-    }
-
-    public UserDTO getByEmailAndPassword(String email, String password) throws UserNotExistsException {
-        User user = userRepository.findByEmailAndPassword(email, password);
-        if (user == null)
-            throw new UserNotExistsException();
-
-        return userConverter.toDTO(user, false);
     }
 
     public UserDTO getByEmail(String email) throws UserNotExistsException {
@@ -68,10 +58,14 @@ public class UserService {
         if (userRepository.findByEmail(user.getEmail()) != null && !user.getEmail().equals(existedUser.getEmail()))
             throw new EmailExistsException();
 
-        existedUser.setUsername(user.getUsername());
-        existedUser.setEmail(user.getEmail());
+        User newUser = User.builder()
+                .id(existedUser.getId())
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .password(existedUser.getPassword())
+                .build();
 
-        return userConverter.toDTO(userRepository.save(existedUser), false);
+        return userConverter.toDTO(userRepository.save(newUser), false);
     }
 
     public void deleteUser(Long id) throws UserNotExistsException {

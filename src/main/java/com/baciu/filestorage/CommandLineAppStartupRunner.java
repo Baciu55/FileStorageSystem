@@ -60,8 +60,8 @@ public class CommandLineAppStartupRunner implements CommandLineRunner {
                 .name("ROLE_ADMIN")
                 .build();
 
-        roleService.add(role1);
-        roleService.add(role2);
+        roleService.addRole(role1);
+        roleService.addRole(role2);
 
         User user1 = User.builder()
                 .username("username")

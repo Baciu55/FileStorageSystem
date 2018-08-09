@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+@Builder
 @NoArgsConstructor
 @Getter
 @EqualsAndHashCode(exclude = {"files", "groups"})
@@ -42,16 +43,6 @@ public class User {
             @JoinColumn(name = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "role_id")})
     private Set<Role> roles = new HashSet<>(0);
-
-    @Builder
-    private User(String username, String email, String password, Set<Group> groups, Set<File> files, Set<Role> roles) {
-        this.username = username;
-        this.email = email;
-        this.password = password;
-        this.groups = groups;
-        this.files = files;
-        this.roles = roles;
-    }
 
     @PrePersist
     private void setDate() {
