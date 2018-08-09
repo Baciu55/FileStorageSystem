@@ -6,27 +6,35 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class RoleConverter {
 
     public RoleDTO toDTO(Role role) {
-        RoleDTO roleDTO = new RoleDTO();
-        roleDTO.setId(role.getId());
-        roleDTO.setName(role.getName());
+        return RoleDTO.builder()
+                .id(role.getId())
+                .name(role.getName())
+                .build();
+    }
 
-        return roleDTO;
+    public Role toEntity(RoleDTO roleDTO) {
+        return Role.builder()
+                .name(roleDTO.getName())
+                .build();
     }
 
     public Set<RoleDTO> toDTO(Set<Role> roles) {
-        Set<RoleDTO> rolesDTO = new HashSet<RoleDTO>();
-
-        for (Role role : roles)
-            rolesDTO.add(toDTO(role));
-
-        return rolesDTO;
+        return roles.stream()
+                .map(this::toDTO)
+                .collect(Collectors.toSet());
     }
 
+    public Set<Role> toEntity(Set<RoleDTO> rolesDTO) {
+        return rolesDTO.stream()
+                .map(this::toEntity)
+                .collect(Collectors.toSet());
+    }
 
 
 }
