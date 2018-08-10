@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+@Builder
 @NoArgsConstructor
 @Getter
 @EqualsAndHashCode(exclude = {"user", "groups"})
@@ -44,16 +45,5 @@ public class File {
     @PrePersist
     private void setDate() {
         this.uploadDate = new Date();
-    }
-
-    @Builder
-    private File(String path, String name, String description, Date uploadDate, Long size, User user, Set<Group> groups) {
-        this.path = path;
-        this.name = name;
-        this.description = description;
-        this.uploadDate = uploadDate;
-        this.size = size;
-        this.user = user;
-        this.groups = groups;
     }
 }

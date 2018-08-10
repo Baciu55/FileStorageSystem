@@ -20,11 +20,6 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-//    @PostMapping("login")
-//    public ResponseEntity<?> login(@RequestBody UserDTO userDTO) throws UserNotExistsException {
-//        return new ResponseEntity<>(userService.getByEmailAndPassword(userDTO.getEmail(), userDTO.getPassword()), HttpStatus.OK);
-//    }
-
     @GetMapping("users/{id}")
     public ResponseEntity<?> getUser(@PathVariable("id") Long id) throws UserNotExistsException {
         return new ResponseEntity<>(userService.getUser(id), HttpStatus.OK);
@@ -36,7 +31,7 @@ public class UserController {
     }
 
     @PutMapping("users")
-    public ResponseEntity<?> updateUser(@Valid @RequestBody UserDTO userDTO) throws EmailExistsException, UsernameExistsException {
+    public ResponseEntity<?> updateUser(@Valid @RequestBody UserDTO userDTO) throws EmailExistsException, UsernameExistsException, UserNotExistsException {
         return new ResponseEntity<>(userService.updateUser(userDTO), HttpStatus.OK);
     }
 

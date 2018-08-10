@@ -24,83 +24,49 @@ public class GroupController {
     @Autowired
     private GroupService groupService;
 
-    @Autowired
-    private GroupConverter groupConverter;
-
-    @GetMapping("groups/{id}")
-    public ResponseEntity<?> getGroup(@PathVariable Long id) {
-        GroupDTO group = groupService.getGroup(id);
-        if (group == null)
-            return new ResponseEntity<>("nie znaleziono grupy", HttpStatus.BAD_REQUEST);
-
-        return new ResponseEntity<>(group, HttpStatus.OK);
-    }
-
-    @GetMapping("groups/user/{id}")
-    public ResponseEntity<?> getGroupByUserId(@PathVariable Long id) {
-        Set<GroupDTO> groups = groupService.getGroupByUserId(id);
-        if (groups == null)
-            return new ResponseEntity<>("nie nalezysz do zadnej grupy", HttpStatus.BAD_REQUEST);
-
-        return new ResponseEntity<>(groups, HttpStatus.OK);
+     @GetMapping("groups/{id}")
+    public ResponseEntity<?> getGroup(@PathVariable Long id) throws GroupNotExistsException {
+        return new ResponseEntity<>(groupService.getGroup(id), HttpStatus.OK);
     }
 
     @PostMapping("groups")
     public ResponseEntity<?> addGroup(@Valid @RequestBody GroupDTO groupDTO) {
-        GroupDTO group = groupService.addGroup(groupConverter.toEntity(groupDTO));
-
-        return new ResponseEntity<>(group, HttpStatus.OK);
+        return new ResponseEntity<>(groupService.addGroup(groupDTO), HttpStatus.OK);
     }
 
-    @PostMapping("groups/{id}/users")
-    public ResponseEntity<?> addGroupUsers(@RequestBody UserDTO userDTO, @PathVariable("id") Long id) throws UserNotExistsException, GroupNotExistsException {
-        System.out.println(id);
-        System.out.println(userDTO);
-        groupService.addGroupUsers(userDTO.getEmail(), id);
-        return ResponseEntity.ok("uzytkownik dodany do grupy");
+    @PostMapping("groups/{groupId}/users")
+    public ResponseEntity<?> addGroupUsers(@RequestBody UserDTO userDTO, @PathVariable("groupId") Long groupId) throws UserNotExistsException, GroupNotExistsException {
+        return new ResponseEntity<>(groupService.addGroupUsers(userDTO, groupId), HttpStatus.OK);
     }
 
-    @PostMapping("groups/{id}/files")
-    public ResponseEntity<?> addGroupFiles(@RequestBody Set<FileDTO> filesDTO, @PathVariable("id") Long id) {
-        System.out.println(filesDTO.toString());
-        System.out.println(id);
-        groupService.addGroupFiles(filesDTO, id);
-        return ResponseEntity.ok("ok");
+    @PostMapping("groups/{groupId}/files")
+    public ResponseEntity<?> addGroupFiles(@RequestBody Set<FileDTO> filesDTO, @PathVariable("groupId") Long groupId) throws GroupNotExistsException {
+        return new ResponseEntity<>(groupService.addGroupFiles(filesDTO, groupId), HttpStatus.OK);
     }
 
-    @PostMapping("groups/{id}/file")
-    public ResponseEntity<?> addGroupFile(@RequestBody FileDTO fileDTO, @PathVariable("id") Long id) throws GroupNotExistsException {
-        System.out.println(fileDTO.toString());
-        System.out.println(id);
-        groupService.addGroupFile(fileDTO, id);
-        return ResponseEntity.ok("ok");
+    @PostMapping("groups/{groupId}/file")
+    public ResponseEntity<?> addGroupFile(@RequestBody FileDTO fileDTO, @PathVariable("groupId") Long groupId) throws GroupNotExistsException {
+        return new ResponseEntity<>(groupService.addGroupFile(fileDTO, groupId), HttpStatus.OK);
     }
 
     @PutMapping("groups")
     public ResponseEntity<?> updateGroup(@RequestBody GroupDTO groupDTO) {
-        GroupDTO group = groupService.updateGroup(groupConverter.toEntity(groupDTO));
-
-        return new ResponseEntity<>(group, HttpStatus.OK);
+        return new ResponseEntity<>(groupService.updateGroup(groupDTO), HttpStatus.OK);
     }
 
     @PutMapping("groups/{groupId}/user/add/{userId}")
-    public ResponseEntity<?> addUserIntoGroup(@PathVariable("groupId") Long groupId, @PathVariable("userId") Long userId) {
-        groupService.addUser(groupId, userId);
-
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<?> addUserToGroup(@PathVariable("groupId") Long groupId, @PathVariable("userId") Long userId) {
+        return new ResponseEntity<>(groupService.addUser(groupId, userId), HttpStatus.OK);
     }
 
-    @DeleteMapping("groups/{id}")
-    public ResponseEntity<?> deleteGroup(@PathVariable("id") Long id) throws GroupNotExistsException {
-        groupService.deleteGroup(id);
-
-        return new ResponseEntity<>("grupa usunieta", HttpStatus.OK);
+    @DeleteMapping("groups/{groupId}")
+    public ResponseEntity<?> deleteGroup(@PathVariable("groupId") Long groupId) throws GroupNotExistsException {
+        return new ResponseEntity<>(groupService.deleteGroup(groupId), HttpStatus.OK);
     }
 
     @DeleteMapping("groups/{groupId}/files/{fileId}")
     public ResponseEntity<?> deleteGroupFile(@PathVariable("groupId") Long groupId, @PathVariable("fileId") Long fileId) {
-        groupService.deleteGroupFile(groupId, fileId);
-        return new ResponseEntity<>("plik usuniety", HttpStatus.OK);
+        return new ResponseEntity<>(groupService.deleteGroupFile(groupId, fileId), HttpStatus.OK);
     }
 
 }

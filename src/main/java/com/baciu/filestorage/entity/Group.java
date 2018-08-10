@@ -6,7 +6,7 @@ import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
-
+@Builder
 @NoArgsConstructor
 @Getter
 @EqualsAndHashCode(exclude = {"users", "files"})
@@ -37,12 +37,4 @@ public class Group {
             inverseJoinColumns = {@JoinColumn(name = "file_id", nullable = false)
             })
     private Set<File> files = new HashSet<>(0);
-
-    @Builder
-    private Group(String name, String description, Set<User> users, Set<File> files) {
-        this.name = name;
-        this.description = description;
-        this.users = users;
-        this.files = files;
-    }
 }
