@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -22,10 +23,8 @@ public class UserService {
     private UserConverter userConverter;
 
     public UserDTO getUser(Long id) throws UserNotExistsException {
-        if(!userRepository.exists(id))
-            throw new UserNotExistsException();
-
-        return userConverter.toDTO(userRepository.findOne(id), true);
+        return userConverter.toDTO(userRepository.findById(id)
+                .orElseThrow(UserNotExistsException::new), true);
     }
 
     public UserDTO addUser(UserDTO userDTO) throws EmailExistsException, UsernameExistsException {
@@ -41,21 +40,20 @@ public class UserService {
     }
 
     public UserDTO getByEmail(String email) throws UserNotExistsException {
-        User user = userRepository.findByEmail(email);
-        if (user == null)
-            throw new UserNotExistsException();
-
-        return userConverter.toDTO(user, false);
+        Optional<User> user = userRepository.findByEmail(email);
+        return userConverter.toDTO(user.orElseThrow(UserNotExistsException::new), false);
     }
 
-    public UserDTO updateUser(UserDTO userDTO) throws EmailExistsException, UsernameExistsException {
+    public UserDTO updateUser(UserDTO userDTO) throws EmailExistsException, UsernameExistsException, UserNotExistsException {
         User user = userConverter.toEntity(userDTO);
-        User existedUser = userRepository.findOne(user.getId());
+        User existedUser = userRepository
+                .findById(user.getId())
+                .orElseThrow(UserNotExistsException::new);
 
-        if (userRepository.findByUsername(user.getUsername()) != null && !user.getUsername().equals(existedUser.getUsername()))
+        if (usernameExists(user.getUsername(), existedUser.getUsername()))
            throw new UsernameExistsException();
 
-        if (userRepository.findByEmail(user.getEmail()) != null && !user.getEmail().equals(existedUser.getEmail()))
+        if (emailExists(user.getEmail(), existedUser.getEmail()))
             throw new EmailExistsException();
 
         User newUser = User.builder()
@@ -68,12 +66,18 @@ public class UserService {
         return userConverter.toDTO(userRepository.save(newUser), false);
     }
 
-    public void deleteUser(Long id) throws UserNotExistsException {
-        User user = userRepository.findOne(id);
-        if(user == null) throw new UserNotExistsException();
-
-        userRepository.delete(id);
+    private boolean usernameExists(String newUsername, String existedUsername) throws UsernameExistsException {
+        userRepository.findByUsername(newUsername).orElseThrow(UsernameExistsException::new);
+        return !newUsername.equals(existedUsername);
     }
 
+    private boolean emailExists(String newEmail, String existedEmail) throws EmailExistsException {
+        userRepository.findByEmail(newEmail).orElseThrow(EmailExistsException::new);
+        return !newEmail.equals(existedEmail);
+    }
 
+    public void deleteUser(Long id) throws UserNotExistsException {
+        User user = userRepository.findById(id).orElseThrow(UserNotExistsException::new);
+        userRepository.delete(user);
+    }
 }
