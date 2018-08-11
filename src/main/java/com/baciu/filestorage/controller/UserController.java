@@ -38,7 +38,7 @@ public class UserController {
     @DeleteMapping("users/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable("id") Long id) throws UserNotExistsException {
         userService.deleteUser(id);
-        return new ResponseEntity<>(new ResponseMessageDTO("user deleted"), HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }

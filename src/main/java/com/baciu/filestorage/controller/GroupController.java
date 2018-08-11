@@ -1,10 +1,9 @@
 package com.baciu.filestorage.controller;
 
-import com.baciu.filestorage.converter.GroupConverter;
 import com.baciu.filestorage.dto.FileDTO;
 import com.baciu.filestorage.dto.GroupDTO;
 import com.baciu.filestorage.dto.UserDTO;
-import com.baciu.filestorage.entity.Group;
+import com.baciu.filestorage.exception.FileNotExistsException;
 import com.baciu.filestorage.exception.GroupNotExistsException;
 import com.baciu.filestorage.exception.UserNotExistsException;
 import com.baciu.filestorage.service.GroupService;
@@ -14,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
+import java.io.FileNotFoundException;
 import java.util.Set;
 
 @RestController
@@ -45,28 +44,30 @@ public class GroupController {
     }
 
     @PostMapping("groups/{groupId}/file")
-    public ResponseEntity<?> addGroupFile(@RequestBody FileDTO fileDTO, @PathVariable("groupId") Long groupId) throws GroupNotExistsException {
+    public ResponseEntity<?> addGroupFile(@RequestBody FileDTO fileDTO, @PathVariable("groupId") Long groupId) throws GroupNotExistsException, FileNotFoundException {
         return new ResponseEntity<>(groupService.addGroupFile(fileDTO, groupId), HttpStatus.OK);
     }
 
     @PutMapping("groups")
-    public ResponseEntity<?> updateGroup(@RequestBody GroupDTO groupDTO) {
+    public ResponseEntity<?> updateGroup(@RequestBody GroupDTO groupDTO) throws GroupNotExistsException {
         return new ResponseEntity<>(groupService.updateGroup(groupDTO), HttpStatus.OK);
     }
 
     @PutMapping("groups/{groupId}/user/add/{userId}")
-    public ResponseEntity<?> addUserToGroup(@PathVariable("groupId") Long groupId, @PathVariable("userId") Long userId) {
-        return new ResponseEntity<>(groupService.addUser(groupId, userId), HttpStatus.OK);
+    public ResponseEntity<?> addUserToGroup(@PathVariable("groupId") Long groupId, @PathVariable("userId") Long userId) throws UserNotExistsException, GroupNotExistsException {
+        return new ResponseEntity<>(groupService.addUserToGroup(groupId, userId), HttpStatus.OK);
     }
 
     @DeleteMapping("groups/{groupId}")
     public ResponseEntity<?> deleteGroup(@PathVariable("groupId") Long groupId) throws GroupNotExistsException {
-        return new ResponseEntity<>(groupService.deleteGroup(groupId), HttpStatus.OK);
+         groupService.deleteGroup(groupId);
+         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("groups/{groupId}/files/{fileId}")
-    public ResponseEntity<?> deleteGroupFile(@PathVariable("groupId") Long groupId, @PathVariable("fileId") Long fileId) {
-        return new ResponseEntity<>(groupService.deleteGroupFile(groupId, fileId), HttpStatus.OK);
+    public ResponseEntity<?> deleteGroupFile(@PathVariable("groupId") Long groupId, @PathVariable("fileId") Long fileId) throws GroupNotExistsException, FileNotExistsException {
+         groupService.deleteGroupFile(groupId, fileId);
+         return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }
