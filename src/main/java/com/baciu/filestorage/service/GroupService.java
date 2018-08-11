@@ -1,18 +1,17 @@
 package com.baciu.filestorage.service;
 
-import com.baciu.filestorage.converter.FileConverter;
+import com.baciu.filestorage.converter.UserFileConverter;
 import com.baciu.filestorage.converter.GroupConverter;
-import com.baciu.filestorage.converter.UserConverter;
-import com.baciu.filestorage.dto.FileDTO;
+import com.baciu.filestorage.dto.UserFileDTO;
 import com.baciu.filestorage.dto.GroupDTO;
 import com.baciu.filestorage.dto.UserDTO;
-import com.baciu.filestorage.entity.File;
+import com.baciu.filestorage.entity.UserFile;
 import com.baciu.filestorage.entity.Group;
 import com.baciu.filestorage.entity.User;
-import com.baciu.filestorage.exception.FileNotExistsException;
+import com.baciu.filestorage.exception.UserFileNotExistsException;
 import com.baciu.filestorage.exception.GroupNotExistsException;
 import com.baciu.filestorage.exception.UserNotExistsException;
-import com.baciu.filestorage.repository.FileRepository;
+import com.baciu.filestorage.repository.UserFileRepository;
 import com.baciu.filestorage.repository.GroupRepository;
 import com.baciu.filestorage.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,10 +33,10 @@ public class GroupService {
     private GroupConverter groupConverter;
 
     @Autowired
-    private FileConverter fileConverter;
+    private UserFileConverter userFileConverter;
 
     @Autowired
-    private FileRepository fileRepository;
+    private UserFileRepository userFileRepository;
 
     public GroupDTO getGroup(Long groupId) throws GroupNotExistsException {
         return groupConverter.toDTOData(groupRepository.findById(groupId)
@@ -58,16 +57,16 @@ public class GroupService {
         return groupConverter.toDTO(groupRepository.save(group));
     }
 
-    public GroupDTO addGroupFiles(Set<FileDTO> filesDTO, Long groupId) throws GroupNotExistsException {
+    public GroupDTO addGroupFiles(Set<UserFileDTO> filesDTO, Long groupId) throws GroupNotExistsException {
         Group group = groupRepository.findById(groupId)
                 .orElseThrow(GroupNotExistsException::new);
 
-        group.getFiles().addAll(fileConverter.toEntity(filesDTO));
+        group.getUserFiles().addAll(userFileConverter.toEntity(filesDTO));
 
 //        Group newGroup = Group.builder()
 //                .id(group.getId())
 //                .description(group.getDescription())
-//                .files(group.getFiles())
+//                .files(group.getUserFiles())
 //                .name(group.getName())
 //                .users(group.getUsers())
 //                .build();
@@ -75,11 +74,11 @@ public class GroupService {
         return groupConverter.toDTO(groupRepository.save(group));
     }
 
-    public GroupDTO addGroupFile(FileDTO fileDTO, Long id) throws GroupNotExistsException, FileNotFoundException {
+    public GroupDTO addGroupFile(UserFileDTO userFileDTO, Long id) throws GroupNotExistsException, FileNotFoundException {
         Group group = groupRepository.findById(id)
                 .orElseThrow(GroupNotExistsException::new);
 
-        group.getFiles().add(fileConverter.toEntity(fileDTO));
+        group.getUserFiles().add(userFileConverter.toEntity(userFileDTO));
         return groupConverter.toDTO(groupRepository.save(group));
     }
 
@@ -106,14 +105,14 @@ public class GroupService {
         groupRepository.delete(group);
     }
 
-    public void deleteGroupFile(Long groupId, Long fileId) throws GroupNotExistsException, FileNotExistsException {
+    public void deleteGroupFile(Long groupId, Long fileId) throws GroupNotExistsException, UserFileNotExistsException {
         Group group = groupRepository.findById(groupId)
                 .orElseThrow(GroupNotExistsException::new);
-        File file = fileRepository.findById(fileId)
-                .orElseThrow(FileNotExistsException::new);
+        UserFile userFile = userFileRepository.findById(fileId)
+                .orElseThrow(UserFileNotExistsException::new);
 
-        Set<File> files = group.getFiles();
-        files.remove(file);
+        Set<UserFile> userFiles = group.getUserFiles();
+        userFiles.remove(userFile);
         groupRepository.save(group);
     }
 

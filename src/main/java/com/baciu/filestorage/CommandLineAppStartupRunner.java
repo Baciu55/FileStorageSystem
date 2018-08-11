@@ -2,18 +2,22 @@ package com.baciu.filestorage;
 
 
 import com.baciu.filestorage.converter.UserConverter;
-import com.baciu.filestorage.entity.File;
+import com.baciu.filestorage.dto.RoleDTO;
+import com.baciu.filestorage.entity.UserFile;
 import com.baciu.filestorage.entity.Group;
 import com.baciu.filestorage.entity.Role;
 import com.baciu.filestorage.entity.User;
 import com.baciu.filestorage.exception.EmailExistsException;
 import com.baciu.filestorage.exception.RoleExistsException;
 import com.baciu.filestorage.exception.UsernameExistsException;
-import com.baciu.filestorage.repository.FileRepository;
+import com.baciu.filestorage.repository.GroupRepository;
+import com.baciu.filestorage.repository.RoleRepository;
+import com.baciu.filestorage.repository.UserFileRepository;
 import com.baciu.filestorage.repository.UserRepository;
 import com.baciu.filestorage.service.GroupService;
 import com.baciu.filestorage.service.RoleService;
 import com.baciu.filestorage.service.UserService;
+import org.hibernate.validator.constraints.URL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,22 +30,16 @@ import java.util.Arrays;
 public class CommandLineAppStartupRunner implements CommandLineRunner {
 
     @Autowired
-    private RoleService roleService;
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private GroupService groupService;
-
-    @Autowired
-    private FileRepository fileRepository;
-
-    @Autowired
-    private UserConverter userConverter;
+    private UserFileRepository userFileRepository;
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private RoleRepository roleRepository;
+
+    @Autowired
+    private GroupRepository groupRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(CommandLineAppStartupRunner.class);
 
@@ -60,8 +58,8 @@ public class CommandLineAppStartupRunner implements CommandLineRunner {
                 .name("ROLE_ADMIN")
                 .build();
 
-        roleService.addRole(role1);
-        roleService.addRole(role2);
+        roleRepository.save(role1);
+        roleRepository.save(role2);
 
         User user1 = User.builder()
                 .username("username")
@@ -85,17 +83,17 @@ public class CommandLineAppStartupRunner implements CommandLineRunner {
                 .name("grupa2")
                 .description("grupa numer dwa")
                 .build();
-        groupService.addGroup(group1);
-        groupService.addGroup(group2);
+        groupRepository.save(group1);
+        groupRepository.save(group2);
 
-        File file = File.builder()
+        UserFile userFile = UserFile.builder()
                 .name("my photo")
                 .description("me and my family")
                 .path("/photos/photo1.jpg")
                 .size(12551l)
                 .user(user1)
                 .build();
-        fileRepository.save(file);
+        userFileRepository.save(userFile);
 
     }
 }

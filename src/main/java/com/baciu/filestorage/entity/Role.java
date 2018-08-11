@@ -8,6 +8,7 @@ import java.util.Set;
 
 @Builder
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @EqualsAndHashCode(exclude = "users")
 @ToString(exclude = "users")

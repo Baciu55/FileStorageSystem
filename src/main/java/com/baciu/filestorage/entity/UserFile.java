@@ -9,11 +9,12 @@ import java.util.Set;
 
 @Builder
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @EqualsAndHashCode(exclude = {"user", "groups"})
 @ToString(exclude = {"user", "groups"})
 @Entity
-public class File {
+public class UserFile {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -39,7 +40,7 @@ public class File {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "files")
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "userFiles")
     private Set<Group> groups = new HashSet<>(0);
 
     @PrePersist

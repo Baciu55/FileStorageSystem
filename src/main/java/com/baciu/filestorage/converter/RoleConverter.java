@@ -35,6 +35,4 @@ public class RoleConverter {
                 .map(this::toEntity)
                 .collect(Collectors.toSet());
     }
-
-
 }

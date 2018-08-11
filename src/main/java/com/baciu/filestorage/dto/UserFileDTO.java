@@ -14,7 +14,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class FileDTO {
+public class UserFileDTO {
 
     private Long id;
 

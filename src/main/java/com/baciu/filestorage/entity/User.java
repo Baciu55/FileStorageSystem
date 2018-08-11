@@ -9,9 +9,10 @@ import java.util.Set;
 
 @Builder
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
-@EqualsAndHashCode(exclude = {"files", "groups"})
-@ToString(exclude = {"files", "groups"})
+@EqualsAndHashCode(exclude = {"userFiles", "groups"})
+@ToString(exclude = {"userFiles", "groups"})
 @Entity
 public class User {
 
@@ -36,7 +37,7 @@ public class User {
     private Set<Group> groups = new HashSet<>(0);
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-    private Set<File> files = new HashSet<>(0);
+    private Set<UserFile> userFiles = new HashSet<>(0);
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_role", joinColumns = {

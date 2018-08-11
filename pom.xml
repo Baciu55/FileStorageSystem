@@ -9,7 +9,7 @@
 	<packaging>jar</packaging>
 
 	<name>file-storage</name>
-	<description>Multiuser file storage</description>
+	<description>File Storage System</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>

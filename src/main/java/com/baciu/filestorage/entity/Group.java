@@ -8,10 +8,12 @@ import java.util.Set;
 
 @Builder
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
-@EqualsAndHashCode(exclude = {"users", "files"})
-@ToString(exclude = {"users", "files"})
+@EqualsAndHashCode(exclude = {"users", "userFiles"})
+@ToString(exclude = {"users", "userFiles"})
 @Entity
+@Table(name = "groups")
 public class Group {
 
     @Id
@@ -32,9 +34,9 @@ public class Group {
     private Set<User> users = new HashSet<>(0);
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "file_group", joinColumns = {
+    @JoinTable(name = "userfiles_groups", joinColumns = {
             @JoinColumn(name = "group_id", nullable = false)},
-            inverseJoinColumns = {@JoinColumn(name = "file_id", nullable = false)
+            inverseJoinColumns = {@JoinColumn(name = "user_file_id", nullable = false)
             })
-    private Set<File> files = new HashSet<>(0);
+    private Set<UserFile> userFiles = new HashSet<>(0);
 }

@@ -16,7 +16,7 @@ public class GroupDTO {
     private String name;
     private String description;
     private Set<UserDTO> users;
-    private Set<FileDTO> files;
+    private Set<UserFileDTO> files;
     private Integer membersCount;
     private Integer filesCount;
 }

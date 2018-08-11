@@ -1,6 +1,5 @@
 package com.baciu.filestorage.controller;
 
-import com.baciu.filestorage.dto.ResponseMessageDTO;
 import com.baciu.filestorage.dto.UserDTO;
 import com.baciu.filestorage.exception.EmailExistsException;
 import com.baciu.filestorage.exception.UserNotExistsException;

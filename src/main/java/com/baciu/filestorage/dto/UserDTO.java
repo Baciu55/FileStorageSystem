@@ -28,7 +28,7 @@ public class UserDTO {
     private String password;
 
     private Date registerDate;
-    private Set<FileDTO> files;
+    private Set<UserFileDTO> files;
     private Set<GroupDTO> groups;
     private Set<RoleDTO> roles;
 

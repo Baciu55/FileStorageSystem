@@ -1,13 +1,11 @@
 package com.baciu.filestorage.dto;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.validation.constraints.Size;
 
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
 @Getter
 public class RoleDTO {

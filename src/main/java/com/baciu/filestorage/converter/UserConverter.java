@@ -7,18 +7,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class UserConverter {
-
-    @Autowired
-    private FileConverter fileConverter;
-
-    @Autowired
-    private GroupConverter groupConverter;
-
-    @Autowired
-    private RoleConverter roleConverter;
 
     public User toEntity(UserDTO userDTO) {
         return User.builder()
@@ -30,7 +22,7 @@ public class UserConverter {
                 .build();
     }
 
-    public UserDTO toDTO(User user, boolean includeData) {
+    public UserDTO toDTO(User user) {
         return UserDTO.builder()
                 .id(user.getId())
                 .username(user.getUsername())
@@ -41,17 +33,15 @@ public class UserConverter {
     }
 
     public Set<UserDTO> toDTO(Set<User> users) {
-        Set<UserDTO> usersDTO = new HashSet<UserDTO>();
-        for (User u : users)
-            usersDTO.add(toDTO(u, false));
-        return usersDTO;
+        return users.stream()
+                .map(this::toDTO)
+                .collect(Collectors.toSet());
     }
 
     public Set<User> toEntity(Set<UserDTO> usersDTO) {
-        Set<User> users = new HashSet<>(0);
-        for (UserDTO userDTO : usersDTO)
-            users.add(toEntity(userDTO));
-        return users;
+        return usersDTO.stream()
+                .map(this::toEntity)
+                .collect(Collectors.toSet());
     }
 
 }

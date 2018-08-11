@@ -24,7 +24,7 @@ public class UserService {
 
     public UserDTO getUser(Long id) throws UserNotExistsException {
         return userConverter.toDTO(userRepository.findById(id)
-                .orElseThrow(UserNotExistsException::new), true);
+                .orElseThrow(UserNotExistsException::new));
     }
 
     public UserDTO addUser(UserDTO userDTO) throws EmailExistsException, UsernameExistsException {
@@ -36,12 +36,12 @@ public class UserService {
         if (userRepository.findByEmail(user.getEmail()) != null)
             throw new EmailExistsException();
 
-        return userConverter.toDTO(userRepository.save(user), false);
+        return userConverter.toDTO(userRepository.save(user));
     }
 
     public UserDTO getByEmail(String email) throws UserNotExistsException {
         Optional<User> user = userRepository.findByEmail(email);
-        return userConverter.toDTO(user.orElseThrow(UserNotExistsException::new), false);
+        return userConverter.toDTO(user.orElseThrow(UserNotExistsException::new));
     }
 
     public UserDTO updateUser(UserDTO userDTO) throws EmailExistsException, UsernameExistsException, UserNotExistsException {
@@ -63,7 +63,7 @@ public class UserService {
                 .password(existedUser.getPassword())
                 .build();
 
-        return userConverter.toDTO(userRepository.save(newUser), false);
+        return userConverter.toDTO(userRepository.save(newUser));
     }
 
     private boolean usernameExists(String newUsername, String existedUsername) throws UsernameExistsException {
