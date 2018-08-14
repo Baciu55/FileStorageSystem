@@ -30,19 +30,19 @@ public class UserService {
     public UserDTO addUser(UserDTO userDTO) throws EmailExistsException, UsernameExistsException {
         User user = userConverter.toEntity(userDTO);
 
-        if (userRepository.findByUsername(user.getUsername()) != null)
+        if (userRepository.findByUsername(user.getUsername()).isPresent())
             throw new UsernameExistsException();
 
-        if (userRepository.findByEmail(user.getEmail()) != null)
+        if (userRepository.findByEmail(user.getEmail()).isPresent())
             throw new EmailExistsException();
 
         return userConverter.toDTO(userRepository.save(user));
     }
 
-    public UserDTO getByEmail(String email) throws UserNotExistsException {
-        Optional<User> user = userRepository.findByEmail(email);
-        return userConverter.toDTO(user.orElseThrow(UserNotExistsException::new));
-    }
+//    public UserDTO getByEmail(String email) throws UserNotExistsException {
+//        Optional<User> user = userRepository.findByEmail(email);
+//        return userConverter.toDTO(user.orElseThrow(UserNotExistsException::new));
+//    }
 
     public UserDTO updateUser(UserDTO userDTO) throws EmailExistsException, UsernameExistsException, UserNotExistsException {
         User user = userConverter.toEntity(userDTO);
