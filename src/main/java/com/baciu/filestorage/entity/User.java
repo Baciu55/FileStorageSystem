@@ -3,6 +3,7 @@ package com.baciu.filestorage.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -11,6 +12,8 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Data
+@Setter
 @EqualsAndHashCode(exclude = {"userFiles", "groups"})
 @ToString(exclude = {"userFiles", "groups"})
 @Entity
@@ -46,8 +49,9 @@ public class User {
     private Set<Role> roles = new HashSet<>(0);
 
     @PrePersist
-    private void setDate() {
+    private void initializeData() {
         this.registerDate = new Date();
+        this.roles = new HashSet<>(Arrays.asList(Role.builder().id(1l).build()));
     }
 
 }
